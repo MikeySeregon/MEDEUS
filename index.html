@@ -5,6 +5,8 @@
 <meta charset="UTF-8">
 <title>Data Studio AI Chat</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
 <style>
 
 body{
@@ -61,6 +63,16 @@ h2{
 	overflow:auto;
 	margin-top:10px;
 	font-size:12px;
+}
+
+.chart-box{
+	position:relative;
+	height:300px;
+	max-width:500px;
+	background:white;
+	border-radius:10px;
+	padding:10px;
+	margin-top:10px;
 }
 
 #input-area{
@@ -156,13 +168,13 @@ async function sendQuestion(){
 	// USER MESSAGE
 	// ============================
 
-	messages.innerHTML += `
+	messages.insertAdjacentHTML("beforeend", `
 		<div class="message user">
 			<div class="bubble">
 				${escapeHtml(question)}
 			</div>
 		</div>
-	`;
+	`);
 
 	input.value = "";
 
@@ -173,13 +185,13 @@ async function sendQuestion(){
 	const loadingId =
 		"loading-" + Date.now();
 
-	messages.innerHTML += `
+	messages.insertAdjacentHTML("beforeend", `
 		<div class="message bot" id="${loadingId}">
 			<div class="bubble loading">
 				Analizando datos...
 			</div>
 		</div>
-	`;
+	`);
 
 	messages.scrollTop =
 		messages.scrollHeight;
@@ -210,12 +222,27 @@ async function sendQuestion(){
 		const sqlId =
 			"sql-" + Date.now();
 
-		messages.innerHTML += `
+		const chartId =
+			"chart-" + Date.now();
+
+		messages.insertAdjacentHTML("beforeend", `
 			<div class="message bot">
 
 				<div class="bubble">
 					${escapeHtml(data.answer || "Sin respuesta")}
 				</div>
+
+				${
+					data.chart
+					?
+					`
+					<div class="chart-box">
+						<canvas id="${chartId}"></canvas>
+					</div>
+					`
+					:
+					""
+				}
 
 				${
 					data.sql
@@ -241,7 +268,17 @@ async function sendQuestion(){
 				}
 
 			</div>
-		`;
+		`);
+
+		// El canvas recién se hace instanciable una vez que ya está en el DOM
+		if(data.chart){
+			const ctx =
+				document
+					.getElementById(chartId)
+					.getContext("2d");
+
+			new Chart(ctx, data.chart);
+		}
 
 	}catch(error){
 
@@ -249,13 +286,13 @@ async function sendQuestion(){
 			.getElementById(loadingId)
 			.remove();
 
-		messages.innerHTML += `
+		messages.insertAdjacentHTML("beforeend", `
 			<div class="message bot">
 				<div class="bubble" style="background:#fecaca;">
 					Error conectando con el servidor
 				</div>
 			</div>
-		`;
+		`);
 	}
 
 	messages.scrollTop =
