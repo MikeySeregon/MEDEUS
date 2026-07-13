@@ -362,11 +362,11 @@ async def chat(domain: str, q: Question, request: Request):
             3. Para evitar errores de división por cero al calcular razones o tasas, envuelve siempre los denominadores usando la función SAFE_DIVIDE(numerador, denominador).
             </reglas_del_esquema>
             <funciones_disponibles>
-            Al generar consultas SQL que filtren, agrupen o comparen por la columna `departamento_encuesta`, debes aplicar siempre la función de usuario (UDF) `admanagerapiaccess-382213.UsuariosOPSA.normalize_text` en ambos lados de la comparación. Esto asegura que la búsqueda no falle por tildes o mayúsculas.
+            Al generar consultas SQL que filtren, agrupen o comparen por la columna `departamento_encuesta`, debes aplicar siempre la función de usuario (UDF) `admanagerapiaccess-382213.UsuariosOPSA.normalize_text` en el lado que tenga el texto, mientras que el campo de la tabla debe llevar los replace y lower necesarios para normalizar. Esto asegura que la búsqueda no falle por tildes o mayúsculas.
             Ejemplo de uso correcto:
             SELECT * 
             FROM `admanagerapiaccess-382213.UsuariosOPSA.View_SegExt_EncuestasTypeform`
-            WHERE `admanagerapiaccess-382213.UsuariosOPSA.normalize_text`(departamento_encuesta) = `admanagerapiaccess-382213.UsuariosOPSA.normalize_text`('francisco morazán');
+            WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(departamento_encuesta,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u')) = `admanagerapiaccess-382213.UsuariosOPSA.normalize_text`('francisco morazán');
             </funciones_a_usar>
             <tabla_permitida>
             {allowed_table}
