@@ -74,6 +74,16 @@ h2 {
     background: #f3f4f6;
 }
 
+.chart-box {
+    position: relative;
+    height: 220px;
+    max-width: 100%;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
 .user .bubble {	
     background: #dbeafe;	
     color: #000;	
@@ -118,6 +128,7 @@ button {
     .chat-container { padding: 0; }
     .bubble { max-width: 70%; font-size: 15px; }
     h2 { font-size: 1.8rem; }
+    .chart-box { height: 300px; max-width: 500px; }
 }
 </style>
 </head>
@@ -145,6 +156,7 @@ button {
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
 
 if (window.top === window.self)
@@ -175,6 +187,23 @@ function escapeHtml(text) {
 		.replace(/>/g, "&gt;");
 }
 
+let chartCounter = 0;
+
+function chartBoxHtml(chart, canvasId) {
+	return chart
+		? `<div class="chart-box"><canvas id="${canvasId}"></canvas></div>`
+		: "";
+}
+
+function renderChartIfNeeded(chart, canvasId) {
+	if (!chart) {
+		return;
+	}
+	const ctx =
+		document.getElementById(canvasId).getContext("2d");
+	new Chart(ctx, chart);
+}
+
 function handleKey(event){
 
 	if(event.key === "Enter")
@@ -202,13 +231,13 @@ async function sendQuestion(){
 	// USER MESSAGE
 	// ============================
 
-	messages.innerHTML += `
+	messages.insertAdjacentHTML("beforeend", `
 		<div class="message user">
 			<div class="bubble">
 				${escapeHtml(question)}
 			</div>
 		</div>
-	`;
+	`);
 
 	input.value = "";
 
@@ -219,13 +248,13 @@ async function sendQuestion(){
 	const loadingId =
 		"loading-" + Date.now();
 
-	messages.innerHTML += `
+	messages.insertAdjacentHTML("beforeend", `
 		<div class="message bot" id="${loadingId}">
 			<div class="bubble loading">
 				Analizando datos...
 			</div>
 		</div>
-	`;
+	`);
 
 	messages.scrollTop =
 		messages.scrollHeight;
@@ -258,15 +287,21 @@ async function sendQuestion(){
 			marked.parse(data.answer || "Sin respuesta")
 		);
 
-		messages.innerHTML += `
+		const chartId = "chart-" + (chartCounter++);
+
+		messages.insertAdjacentHTML("beforeend", `
 			<div class="message bot">
 
 				<div class="bubble">
 					${html}
 				</div>
 
+				${chartBoxHtml(data.chart, chartId)}
+
 			</div>
-		`;
+		`);
+
+		renderChartIfNeeded(data.chart, chartId);
 
 	}catch(error){
 
@@ -274,13 +309,13 @@ async function sendQuestion(){
 			.getElementById(loadingId)
 			.remove();
 
-		messages.innerHTML += `
+		messages.insertAdjacentHTML("beforeend", `
 			<div class="message bot">
 				<div class="bubble" style="background:#fecaca;">
 					Error conectando con el servidor
 				</div>
 			</div>
-		`;
+		`);
 	}
 
 	messages.scrollTop =
@@ -314,11 +349,16 @@ async function loadHistory() {
                 ? DOMPurify.sanitize(marked.parse(msg.content))
                 : escapeHtml(msg.content);
 
-        messages.innerHTML += `
+        const chartId = "chart-" + (chartCounter++);
+
+        messages.insertAdjacentHTML("beforeend", `
             <div class="message ${className}">
                 <div class="bubble">${content}</div>
+                ${chartBoxHtml(msg.chart, chartId)}
             </div>
-        `;
+        `);
+
+        renderChartIfNeeded(msg.chart, chartId);
     });
 
     messages.scrollTop = messages.scrollHeight;
