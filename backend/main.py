@@ -20,6 +20,7 @@ from utils.chat_storage import (
     format_history,
     save_ai_log,
     save_query_result,
+    save_chart,
     get_last_query_result,
     summarize_history
 )
@@ -88,6 +89,26 @@ class Question(BaseModel):
     question: str
     session_id: str
 
+# ==========================================
+# ESQUEMA DE SALIDA ESTRUCTURADA PARA GRÁFICOS (Chart.js)
+# ==========================================
+# Gemini solo genera "type" y "data". Las "options" de Chart.js se fijan
+# en código para evitar que el modelo devuelva configuraciones inválidas
+# o inconsistentes con el frontend.
+class ChartDataset(BaseModel):
+    label: str
+    data: list[float]
+
+class ChartData(BaseModel):
+    labels: list[str]
+    datasets: list[ChartDataset]
+
+class ChartConfig(BaseModel):
+    type: str
+    data: ChartData
+
+ALLOWED_CHART_TYPES = {"bar", "line", "pie", "doughnut", "scatter"}
+
 class TopicSync(BaseModel):
     slug: str
     active: bool
@@ -117,6 +138,7 @@ async def chat(domain: str, q: Question, request: Request):
     # si el turno terminó en éxito o en cualquiera de las ramas de error.
     ai_logs_buffer = []
     pending_query_result = None
+    pending_chart = None
 
     def buffer_ai_log(stage, prompt, response=None, success=True, error_type=None):
         ai_logs_buffer.append({
@@ -156,6 +178,15 @@ async def chat(domain: str, q: Question, request: Request):
             except Exception:
                 logging.exception("Error guardando query_result diferido")
             pending_query_result = None
+
+    def flush_chart(message_id):
+        nonlocal pending_chart
+        if pending_chart:
+            try:
+                save_chart(conversation_id, pending_chart, message_id)
+            except Exception:
+                logging.exception("Error guardando chart diferido")
+            pending_chart = None
 
     try:
         if domain not in get_valid_domains():
@@ -214,6 +245,14 @@ async def chat(domain: str, q: Question, request: Request):
                 message_id = save_message(conversation_id, "assistant", msg, None, False, "memory_analysis_without_context")
                 flush_ai_logs(message_id)
                 return {"answer": msg}
+
+            if validation_result.get("requiere_grafico"):
+                pending_chart = generate_chart_json(
+                    question=q.question,
+                    rows=last_result["result_json"],
+                    history_text=history_text,
+                    buffer_ai_log=buffer_ai_log
+                )
 
             ANALYSIS_SYSTEM_PROMPT = """
                 {user_rules}
@@ -282,8 +321,10 @@ async def chat(domain: str, q: Question, request: Request):
                     str(type(e).__name__)
                 )
                 flush_ai_logs(message_id)
+                flush_chart(message_id)
                 return {"answer": msg}
 
+            chart_to_return = pending_chart
             message_id = save_message(
                 conversation_id,
                 "assistant",
@@ -291,8 +332,10 @@ async def chat(domain: str, q: Question, request: Request):
                 last_result["sql_query"]
             )
             flush_ai_logs(message_id)
+            flush_chart(message_id)
             return {
-                "answer": final_answer
+                "answer": final_answer,
+                "chart": chart_to_return
             }
 
         # ==========================================
@@ -401,6 +444,14 @@ async def chat(domain: str, q: Question, request: Request):
             flush_ai_logs(message_id)
             return {"answer": msg}
 
+        if validation_result.get("requiere_grafico"):
+            pending_chart = generate_chart_json(
+                question=q.question,
+                rows=rows,
+                history_text=history_text,
+                buffer_ai_log=buffer_ai_log
+            )
+
         # ==========================================
         # 5 y 6. INTERPRETAR RESULTADOS Y PRESENTAR
         # ==========================================
@@ -455,12 +506,15 @@ async def chat(domain: str, q: Question, request: Request):
             message_id = save_message(conversation_id, "assistant", final_answer, sql, False, "analysis_error", str(type(e).__name__))
             flush_ai_logs(message_id)
             flush_query_result(message_id)
+            flush_chart(message_id)
             return {"answer": final_answer}
 
+        chart_to_return = pending_chart
         message_id = save_message(conversation_id, "assistant", final_answer, sql)
         flush_ai_logs(message_id)
         flush_query_result(message_id)
-        return {"answer": final_answer}
+        flush_chart(message_id)
+        return {"answer": final_answer, "chart": chart_to_return}
 
     except Exception as e:
         logging.exception(e)
@@ -468,6 +522,7 @@ async def chat(domain: str, q: Question, request: Request):
             message_id = save_message(conversation_id, "assistant", "Ocurrió un error interno.", None, False, "system_error", str(type(e).__name__))
             flush_ai_logs(message_id)
             flush_query_result(message_id)
+            flush_chart(message_id)
         return {"answer": "Ocurrió un error interno."}
 
 @app.get("/chat/{domain}/history")
@@ -549,6 +604,82 @@ def is_safe_sql(sql, allowed_table):
     except Exception as e:
         logging.error(f"Error en parseo sintáctico de seguridad: {e}")
         return False
+
+def generate_chart_json(question, rows, history_text, buffer_ai_log=None):
+    prompt = None
+    try:
+        CHART_SYSTEM_PROMPT = """
+            Con base en los siguientes datos obtenidos de una consulta SQL, genera la
+            configuración de un gráfico de Chart.js que represente mejor la respuesta
+            a la pregunta del usuario.
+
+            Reglas:
+            - Elige el "type" más adecuado entre: "bar", "line", "pie", "doughnut", "scatter".
+            - "labels" debe contener las categorías del eje X (o los segmentos si es pie/doughnut).
+            - Cada elemento de "datasets" debe tener un "label" descriptivo y un array "data"
+              numérico del mismo tamaño que "labels".
+            - No inventes datos que no estén presentes en <datos_query>.
+            - No agregues texto, explicaciones ni bloques markdown, solo el JSON del esquema.
+
+            <historial_conversacion>
+            {history_text}
+            </historial_conversacion>
+            <pregunta_usuario>
+            {question}
+            </pregunta_usuario>
+            <datos_query>
+            {rows}
+            </datos_query>
+            """
+        prompt = CHART_SYSTEM_PROMPT.format(
+            history_text=history_text,
+            question=question,
+            rows=rows
+        )
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": ChartConfig
+            }
+        )
+        response_text = (response.text or "").strip()
+
+        chart_config = ChartConfig.model_validate_json(response_text)
+
+        if chart_config.type not in ALLOWED_CHART_TYPES:
+            raise ValueError(f"Tipo de gráfico no soportado: {chart_config.type}")
+
+        for dataset in chart_config.data.datasets:
+            if len(dataset.data) != len(chart_config.data.labels):
+                raise ValueError("Un dataset no coincide en longitud con 'labels'.")
+
+        chart_json = chart_config.model_dump()
+        chart_json["options"] = {"responsive": True}
+
+        if buffer_ai_log:
+            buffer_ai_log(
+                stage="chart_generation",
+                prompt=prompt,
+                response=response_text,
+                success=True
+            )
+
+        return chart_json
+
+    except Exception as e:
+        logging.exception(e)
+        if buffer_ai_log:
+            buffer_ai_log(
+                stage="chart_generation",
+                prompt=prompt or "PROMPT_NO_GENERADO",
+                success=False,
+                error_type=str(type(e).__name__)
+            )
+        # Fallo al generar el gráfico NO debe romper la respuesta textual.
+        return None
 
 async def is_allowed_question_ai(question, validation_prompt, history_text, buffer_ai_log=None):
     prompt = None
@@ -638,6 +769,10 @@ async def is_allowed_question_ai(question, validation_prompt, history_text, buff
             "requiere_sql": validation_data.get(
                 "requiere_sql",
                 True
+            ),
+            "requiere_grafico": validation_data.get(
+                "requiere_grafico",
+                False
             )
         }
     except Exception as e:

@@ -292,6 +292,51 @@ def save_query_result(
     finally:
         db.close()
 
+def save_chart(
+    conversation_id,
+    chart_json,
+    message_id
+):
+    db = SessionLocal()
+
+    try:
+
+        db.execute(
+            text("""
+                INSERT INTO chatbot_charts
+                (
+                    conversation_id,
+                    message_id,
+                    chart_json,
+                    created_at,
+                    updated_at
+                )
+                VALUES
+                (
+                    :conversation_id,
+                    :message_id,
+                    :chart_json,
+                    NOW(),
+                    NOW()
+                )
+            """),
+            {
+                "conversation_id": conversation_id,
+                "message_id": message_id,
+                "chart_json": json.dumps(chart_json, ensure_ascii=False)
+            }
+        )
+
+        db.commit()
+
+    except Exception as e:
+        logging.exception(e)
+        db.rollback()
+        raise
+
+    finally:
+        db.close()
+
 def get_last_query_result(conversation_id):
     db = SessionLocal()
 
