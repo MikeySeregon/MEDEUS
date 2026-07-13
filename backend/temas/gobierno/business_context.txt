@@ -1,0 +1,277 @@
+# ESTRUCTURA DEL DATASET
+
+La vista consolida encuestas de cuatro temas:
+* Seguridad
+* Empleo
+* Infraestructura
+* Percepción Pública
+
+Cada registro pertenece únicamente a una encuesta y se identifica mediante el campo:
+**titulo**
+Campos disponibles:
+- "Infraestructura Publica - Transporte publico, trafico y movilidad"
+- "Empleo"
+- "Percepción Publica"
+- "Seguridad - Extorsion (03/23/2026)"
+
+## Regla fundamental
+Un registro nunca contiene información válida de múltiples temas.
+Las columnas de cada tema únicamente contienen datos cuando `titulo` corresponde a esa encuesta.
+---
+# REGLAS DE NEGOCIO
+## userid
+Identificador del usuario.
+
+Valor especial:
+* `Guest`: usuario sin cuenta registrada.
+---
+# SEGURIDAD
+Campos disponibles:
+* Principal_problema_seg
+* Comparativo_seg_sem
+* Espacios_inseguros
+* Frecuencia_extorsion
+* impacto_extorsion
+* score_seguridad
+
+## Principal_problema_seg
+Principal problema de seguridad percibido.
+Valores posibles:
+* Robos o Asaltos
+* Violencia en barrios o colonias
+* Violencia intrafamiliar
+* Venta o consumo de drogas
+* Extorsión
+
+## Comparativo_seg_sem
+Percepción de seguridad durante los últimos 6 meses.
+Fecha base: 23 de Marzo de 2026.
+Valores posibles:
+* Mucho menos seguro(a)
+* Igual de seguro(a)
+* Algo más seguro(a)
+* Algo menos seguro(a)
+* Mucho más seguro(a)
+
+## Espacios_inseguros
+Espacios donde existe percepción de inseguridad.
+Valores posibles:
+* No percibe un riesgo particular en estos espacios
+* Cerca de centros educativos
+* En el transporte público
+* En espacios públicos durante la noche
+* En su barrio o colonia
+* En zonas comerciales o mercados
+
+## Frecuencia_extorsion
+Percepción de frecuencia de extorsión.
+Valores posibles:
+* Nada frecuente
+* Poco frecuente
+* Algo frecuente
+* Muy frecuente
+* No tiene suficiente información para opinar
+
+## impacto_extorsion
+Impacto percibido de la extorsión.
+Valores posibles:
+* No le afecta
+* Le afecta algo
+* Le afecta poco
+* Le afecta mucho
+* No tiene suficiente inforamción para opinar
+
+## score_seguridad
+Calificación de Seguridad.
+Valores posibles:
+* Enteros de -2 a 2
+---
+# EMPLEO
+Campos disponibles:
+* emp_situacion
+* emp_barrera_laboral
+* emp_apoyo_laboral
+* emp_oportunidad_laboral
+* emp_oportunidad_zona
+* score_emp_situacion
+
+## emp_situacion
+Situación laboral actual.
+Valores posibles:
+* No estoy trabajando ni buscando empleo en este momento
+* Actualmente estoy desempleado(a)
+* Trabajo por cuenta propia
+* Tengo un empleo informal
+* Tengo un empleo formal
+
+## emp_barrera_laboral
+Barrera principal para conseguir trabajo.
+Valores posibles:
+* Se requiere experiencia previa
+* No hay suficientes oportunidades laborales
+* Falta de referencias
+* Los salarios ofrecidos son demasiado bajos
+* Dificultadoes de transporte o ubicación
+* No cuenta con la capacitación necesaria
+
+## emp_apoyo_laboral
+Apoyo considerado más útil para conseguir trabajo.
+Valores posibles:
+* Certificación de habilidades o experiencia
+* Apoyo para emprender un negocio
+* Acceso a una bolsa de empleo
+* Mejor acceso a transporte o conectividad
+* Orientación laboral o acompañamiento
+* Capactiación técnica o vocacional
+
+## emp_oportunidad_laboral
+Oportunidad de interés.
+Valores posibles:
+* Emprendimiento propio
+* Empleo formal
+* Trabajo remoto o digital
+* Trabajo temporal
+* Capactiación antes de buscar empleo
+
+## emp_oportunidad_zona
+Percepción de oportunidades laborales en la zona.
+Valores posibles:
+* Han empeorado mucho
+* Han empeorado algo
+* Se mantienen igual
+* Han mejorado algo
+* Han mejorado mucho
+
+## score_emp_situacion
+Calificación de Empleo.
+Valores posibles:
+* Enteros de -2 a 2
+---
+# INFRAESTRUCTURA
+Campos disponibles:
+* inf_medio_transporte
+* inf_calif_infraestructura
+* inf_problema_transporte
+* inf_aspecto_mejora
+* inf_tiempo_traslado
+* score_infraestructura
+
+## inf_medio_transporte
+Principal medio de transporte.
+Valores posibles:
+* Vehículo particular
+* Transporte público
+* Motocicleta
+* Taxi o transporte por aplicación
+* Camino la mayor parte del tiempo
+
+## inf_calif_infraestructura
+Calificación de infraestructura.
+Valores posibles:
+* Muy Mala
+* Mala
+* Regular
+* Buena
+* Muy buena
+
+## inf_problema_transporte
+Principal problema de transporte y movilidad.
+Valores posibles:
+* Falta de ordenamiento vial
+* Falta de seguridad en el transporte o en paradas
+* Tiempos de translados demasiado largos
+* Mal estado de calles o vías
+* Transporte público insuficiente o poco frecuente
+* Unidades de transporte en mal estado
+* Congestión vehicular/tráfico
+
+## inf_aspecto_mejora
+Aspecto prioritario de mejora.
+Valores posibles:
+* Aumentar la frecuencia del transporte público
+* Mejorar paradas o terminales (puntos de accesos)
+* Implementar mayor ordenamiento vial y gestión del tráfico
+* Mejorar calles y vías de acceso
+* Modernizar las unidades de transporte
+
+## inf_tiempo_traslado
+Tiempo promedio de traslado.
+Valores posibles:
+* Menos de 15 minutos
+* 15-30 minutos
+* 31-60 minutos
+* Más de 60 minutos
+
+## score_infraestructura
+Calificación de Infraestructura.
+Valores posibles:
+* Enteros de -2 a 2
+---
+# PERCEPCIÓN PÚBLICA
+Campos disponibles:
+* per_calificacion
+* per_razon_principal
+* per_area_atencion
+* per_impacto
+* score_per_calificacion
+* score_per_impacto
+
+## per_calificacion
+Calificación del trabajo del gobierno.
+Valores posibles:
+* Muy malo
+* Malo
+* Regular
+* Bueno
+* Muy bueno
+
+## per_razon_principal
+Motivo principal de la calificación.
+Valores posibles:
+* Seguridad ciudadana
+* Calidad de los servicios públicos
+* Comunicación del gobierno
+* Impacto en tu comunidad
+* Situación económica del país
+* Resultados o avances observados
+* Transparencia y manejo de recursos
+* Cumplimiento de promesas
+
+## per_area_atencion
+Área con mayor urgencia de atención.
+Valores posibles:
+* Corrupción
+* Infraestructura
+* Empleo
+* Costo de vida
+* Salud
+* Educación
+* Apoyo social
+* Seguridad
+
+## per_impacto
+Impacto percibido de las acciones del gobierno.
+Valores posibles:
+* Mucho impacto negativo
+* Algo de impacto negativo
+* Sin impacto notable
+* Algo de impacto positivo
+* Mucho impacto positivo
+
+## score_per_calificacion
+Calificación de percepción del gobierno.
+Valores posibles:
+* Enteros de -2 a 2
+
+## score_per_impacto
+Calificación del impacto del gobierno.
+Valores posibles:
+* Enteros de -2 a 2
+---
+# REGLAS PARA ANÁLISIS Y CONSULTAS
+1. Siempre identificar primero el tema mediante `titulo`.
+2. Utilizar únicamente los campos válidos para ese tema.
+3. No inferir datos de columnas vacías.
+4. No asumir relaciones entre encuestas distintas salvo que la consulta solicite agregaciones entre temas.
+5. Los campos `score_*` representan escalas ordinales enteras entre `-2` y `2`, donde valores mayores indican una evaluación más favorable.
+6. Cuando se soliciten porcentajes, distribuciones, tendencias o comparativos, calcularlos únicamente sobre registros del tema correspondiente.

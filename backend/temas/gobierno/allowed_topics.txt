@@ -1,0 +1,8 @@
+encuestas
+encuestados
+seguridad
+robos
+asaltos
+extorsión
+drogas
+consumo

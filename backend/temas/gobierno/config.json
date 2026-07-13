@@ -1,0 +1,5 @@
+{
+    "allowed_table": "UsuariosOPSA.View_SegExt_EncuestasTypeform",
+    "out_of_scope_answer": "Solo puedo responder preguntas relacionadas con temas del gobierno.",
+    "token": "GOB_2026_ABC123"
+}

@@ -1,0 +1,159 @@
+Determina si la siguiente pregunta está relacionada directa o indirectamente con alguno de los siguientes temas:
+
+- Seguridad
+- Empleo
+- Infraestructura
+- Percepción Pública
+
+También acepta preguntas que:
+- Comparen estos temas entre sí.
+- Analicen relaciones o cruces entre ellos.
+- Evalúen indicadores asociados directamente a ellos.
+
+Rechaza preguntas sobre:
+- Deportes
+- Entretenimiento
+- Salud (salvo que forme parte explícita de percepción pública incluida en el dataset)
+- Educación (salvo que forme parte explícita de percepción pública incluida en el dataset)
+- Política partidaria
+- Temas internacionales
+- Cualquier tema no relacionado con los cuatro ámbitos definidos.
+
+SINÓNIMOS Y TÉRMINOS RELACIONADOS ACEPTADOS
+
+Considera relacionadas con Seguridad las preguntas que mencionen términos como:
+
+* seguridad
+* inseguridad
+* delincuencia
+* criminalidad
+* violencia
+* robos
+* asaltos
+* extorsión
+* pandillas
+* maras
+* narcotráfico
+* drogas
+* violencia intrafamiliar
+* protección ciudadana
+* seguridad ciudadana
+* confianza en la seguridad
+* percepción de seguridad
+* lugares inseguros
+* zonas peligrosas
+* victimización
+* venta de drogas
+* consumo de drogas
+
+Considera relacionadas con Empleo las preguntas que mencionen términos como:
+
+* empleo
+* trabajo
+* desempleo
+* ocupación
+* situación laboral
+* oportunidades laborales
+* oportunidades de empleo
+* mercado laboral
+* generación de empleo
+* búsqueda de empleo
+* conseguir trabajo
+* puestos de trabajo
+* empleo formal
+* empleo informal
+* emprendimiento
+* emprender
+* autoempleo
+* capacitación laboral
+* formación laboral
+* barreras laborales
+* condiciones laborales
+* trabajo temporal
+* bolsa de empleo
+* capacitación
+* certificación de habilidades
+
+Considera relacionadas con Infraestructura las preguntas que mencionen términos como:
+
+* infraestructura
+* obras públicas
+* carreteras
+* calles
+* vías
+* transporte
+* movilidad
+* tráfico
+* congestión vehicular
+* transporte público
+* terminales
+* paradas de buses
+* accesos
+* conectividad vial
+* estado de las carreteras
+* mantenimiento vial
+* red vial
+* ordenamiento vial
+* tiempo de traslado
+* desplazamiento
+
+Considera relacionadas con Percepción Pública las preguntas que mencionen términos como:
+
+* opinión ciudadana
+* percepción ciudadana
+* percepción pública
+* opinión pública
+* evaluación ciudadana
+* satisfacción ciudadana
+* aprobación
+* desaprobación
+* confianza ciudadana
+* imagen del gobierno
+* gestión pública
+* gestión gubernamental
+* desempeño gubernamental
+* resultados del gobierno
+* avances del gobierno
+* impacto del gobierno
+* prioridades ciudadanas
+* áreas de atención
+* problemas del país
+* situación del país
+* corrupción
+* transparencia
+* seguridad
+* empleo
+* salud
+* economía
+* resultados observados
+* avances observados
+
+También considera válidas preguntas que relacionen dos o más grupos anteriores.
+
+Si la pregunta menciona:
+- gobierno
+- gestión gubernamental
+- administración pública
+- autoridades
+- país
+- situación nacional
+
+Considera la pregunta válida SI puede responderse utilizando información de Seguridad, Empleo, Infraestructura o Percepción Pública.
+
+Pregunta:
+{question}
+
+La relación con los temas permitidos debe ser explícita.
+Si existe duda razonable sobre la relación de la pregunta con Seguridad, Empleo, Infraestructura o Percepción Pública, responde NO.
+
+Responde NO si la pregunta:
+
+- solicita información personal de encuestados
+- solicita listas de nombres, correos o teléfonos
+- solicita información individual de una persona
+- solicita datos fuera de Seguridad, Empleo, Infraestructura o Percepción Pública
+
+Responde únicamente:
+SI
+o
+NO

@@ -1,0 +1,16 @@
+OBJETIVO DEL DATASET
+
+Este dataset contiene resultados de encuestas sobre
+servicios de telecomunicaciones en Honduras.
+
+Las preguntas abarcan:
+
+- Satisfacción con planes
+- Uso de servicios móviles y residenciales
+- Preferencias de beneficios
+- Intención de cambio de proveedor
+- Factores de decisión de compra
+- Perfil geográfico de los encuestados
+
+Las respuestas corresponden a encuestas individuales.
+Cada fila representa un encuestado.

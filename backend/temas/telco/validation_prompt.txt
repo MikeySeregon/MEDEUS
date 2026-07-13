@@ -1,0 +1,16 @@
+Determina si la siguiente pregunta está relacionada con:
+- telecomunicaciones
+- satisfacción de clientes
+- encuestas
+- cambio de proveedor
+- experiencia del usuario
+- servicios telco
+- análisis de clientes
+
+Pregunta:
+{question}
+
+Responde únicamente:
+SI
+o
+NO

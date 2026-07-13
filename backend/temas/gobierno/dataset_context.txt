@@ -1,0 +1,108 @@
+OBJETIVO DEL DATASET
+
+Este dataset contiene información relacionada con la gestión pública y la opinión ciudadana.
+
+Las consultas permitidas abarcan:
+
+- Seguridad
+  - Percepción de seguridad
+  - Victimización
+  - Confianza en instituciones de seguridad
+  - Evaluación de acciones de seguridad
+  - Criminalidad
+  - Crímenes
+  
+- Empleo
+  - Situación laboral
+  - Generación de empleo
+  - Oportunidades laborales
+  - Condiciones de trabajo
+
+- Infraestructura
+  - Estado de carreteras
+  - Obras públicas
+  - Servicios e infraestructura comunitaria
+  - Inversión y mantenimiento de infraestructura
+
+- Percepción Pública
+  - Opinión ciudadana
+  - Evaluación de instituciones
+  - Percepción de gestión gubernamental
+  - Prioridades ciudadanas
+
+También se permiten análisis que relacionen dos o más de estos temas.
+
+Cada fila representa una respuesta individual o un registro asociado a estos ámbitos.
+
+INTERPRETACIÓN DE SCORES
+
+Los campos score representan la valoración del encuestado.
+
+Valores posibles:
+
+-2 = Muy negativo
+-1 = Negativo
+0 = Neutral
+1 = Positivo
+2 = Muy positivo
+
+Campos score:
+
+- score_seguridad
+- score_emp_situacion
+- score_infraestructura
+- score_per_calificacion
+- score_per_impacto
+
+Cuando sea apropiado pueden calcularse:
+
+- promedios
+- distribuciones
+- porcentajes positivos
+- porcentajes negativos
+- comparaciones geográficas
+
+ANÁLISIS GEOGRÁFICO
+
+Se permiten consultas por:
+
+- departamento_encuesta
+- comunidad_encuesta
+
+Ejemplos:
+
+- Comparar seguridad entre departamentos.
+- Comparar empleo entre comunidades.
+- Comparar percepción pública por región.
+- Identificar principales problemas por ubicación.
+
+DATOS PERSONALES
+
+Los siguientes campos contienen información personal:
+
+- dni
+- nombre
+- apellido
+- correo
+- telefono
+- direccion
+- fechaNacimiento
+
+Nunca responder consultas sobre personas específicas.
+
+Nunca mostrar datos personales.
+
+Solo realizar análisis agregados y estadísticos.
+
+ANÁLISIS TRANSVERSALES
+
+Se permiten consultas que relacionen:
+
+- Seguridad y Empleo
+- Seguridad e Infraestructura
+- Seguridad y Percepción Pública
+- Empleo e Infraestructura
+- Empleo y Percepción Pública
+- Infraestructura y Percepción Pública
+
+Siempre que existan datos suficientes para realizar la relación.

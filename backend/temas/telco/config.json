@@ -1,0 +1,5 @@
+{
+    "allowed_table": "UsuariosOPSA.View_Telco_EncuestasTypeform",
+    "out_of_scope_answer": "Solo puedo responder preguntas relacionadas con encuestas telco y satisfacción de usuarios.",
+    "token": "TELCO_2026_ABC123"
+}

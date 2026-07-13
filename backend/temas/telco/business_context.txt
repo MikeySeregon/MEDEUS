@@ -1,0 +1,141 @@
+REGLAS DE NEGOCIO
+
+Campo: userid
+Valor variable. "Guest" se asigna a los usuarios que no poseen una cuenta registrada.
+
+Campo: planes_proveedor
+Valores posibles:
+- TIGO
+- Claro
+
+IMPORTANTE:
+Existen valores nulos y vacíos.
+Cuando se calculen porcentajes o distribuciones, excluir nulos y vacíos salvo que el usuario solicite lo contrario.
+
+Campo: planes_satisfaccion
+Tipo: Escala ordinal de satisfacción.
+Orden lógico:
+1. Muy insatisfecho(a)
+2. Insatisfecho(a)
+3. Ni satisfecho(a) ni insatisfecho(a)
+4. Satisfecho(a)
+5. Muy satisfecho(a)
+
+IMPORTANTE:
+Cuando el usuario solicite niveles de satisfacción,
+considerar el orden anterior.
+
+Campo: planes_mejora
+Valores posibles:
+- Mayor velocidad de navegación
+- Beneficios en aplicaciones o redes sociales
+- Más minutos para llamadas
+- Roaming o uso internacional
+- Más datos móviles
+- Un precio más conveniente
+
+Campo: planes_datos
+Valores posibles:
+- Siempre o casi siempre
+- Nunca
+- Frecuentemente
+- Rara vez
+- Algunas veces
+
+Campo: planes_beneficios
+Valores posibles:
+- Posibilidad de adquirir un equipo financiado
+- Aplicaciones o redes sociales incluidas
+- Beneficios para líneas adicionales o familiares
+- Mayor velocidad de navegación
+- Más datos móviles
+- Roaming incluido
+
+Campo: planes_cambio
+Valores posibles:
+- Algo dispuesto(a)
+- Nada dispuesto(a)
+- Muy dispuesto(a)
+- Poco dispuesto(a)
+
+Campo: servicios_utiliza
+Tipo: Multiselección. Un mismo usuario puede tener más de una respuesta.
+Valores posibles:
+- Internet hogar
+- Televisión o entretenimiento
+- Prepago móvil
+- Un paquete combinado de varios servicios
+- Pospago móvil
+
+Campo: servicios_factores
+Valores posibles:
+- Beneficios incluidos
+- Velocidad
+- Atención al cliente
+- Precio
+- Confianza en la marca
+- Cobertura
+
+Campo: servicios_usoprincipal
+Valores posibles:
+- Uso compartido en el hogar
+- Llamadas y comunicación
+- Trabajo o productividad
+- Videojuegos
+- Redes sociales y navegación
+- Streaming de video
+
+Campo: servicios_promocion
+Valores posibles:
+- Entretenimiento incluido
+- Equipo financiado
+- Más datos móviles
+- Aplicaciones incluidas o ilimitadas
+- Descuento en el precio
+- Beneficios familiares o para varias líneas
+
+Campo: servicios_momento_oferta
+Valores posibles:
+- Durante promociones o temporadas especiales
+- Al inicio del mes o del ciclo de pago
+- Generalmente no suelo prestar atención a las ofertas
+- Cuando tengo un inconveniente con el servicio
+- Cuando necesito más datos o capacidad
+
+Campo: departamento_encuesta
+Valores posibles:
+- Cortés
+- Francisco Morazán
+- Colón
+- Santa Bárbara
+- El Paraíso
+- Gracias a Dios
+- Copán
+- Atlántida
+- Intibucá
+- Choluteca
+- Valle
+- Ocotepeque
+- La Paz
+- Olancho
+- Yoro
+- Comayagua
+- Islas de la Bahía
+- Lempira
+
+Campo: fechaNacimiento
+Reglas:
+- Edad = diferencia entre fecha actual y fechaNacimiento.
+- Ignorar fechas menores a 1900.
+- Ignorar fechas futuras.
+- Ignorar edades menores de 5 años.
+- Ignorar edades mayores de 110 años.
+
+SINÓNIMOS
+Proveedor = planes_proveedor
+Operador = planes_proveedor
+Compañía telefónica = planes_proveedor
+Departamento = departamento_encuesta
+Satisfacción con planes = planes_satisfaccion
+Disposición de cambio = planes_cambio
+Edad = calculada desde fechaNacimiento

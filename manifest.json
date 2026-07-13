@@ -1,0 +1,25 @@
+{
+    "name": "AI Chatbot",
+    "logoUrl": "https://raw.githubusercontent.com/googledatastudio/community-visualizations/master/docs/codelab/img/table-chart.png",
+    "organization": "Grupo OPSA",
+    "organizationUrl": "https://url",
+    "termsOfServiceUrl": "https://url",
+    "supportUrl": "https://url",
+    "packageUrl": "https://url",
+    "privacyPolicyUrl": "https://url",
+    "description": "Chatbot IA para Data Studio",
+    "devMode": true,
+    "components": [
+        {
+            "id": "ai_chat",
+            "name": "AI Chat",
+            "iconUrl": "https://raw.githubusercontent.com/googledatastudio/community-visualizations/master/docs/codelab/img/table-chart.png",
+            "description": "Visualización chatbot IA",
+            "resource": {
+                "js": "gs://opsa_chatbot-test-1/index.js",
+                "config": "gs://opsa_chatbot-test-1/config.json",
+                "css": "gs://opsa_chatbot-test-1/index.css"
+            }
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+encuestas
+clientes
+telco
+satisfacción
+servicio
+usuarios
+opiniones
+typeform
+telefonía
+telecomunicaciones
+telefono
+redes
