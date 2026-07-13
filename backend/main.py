@@ -534,22 +534,40 @@ async def get_history(domain: str, session_id: str):
     db = SessionLocal()
     rows = db.execute(
         text("""
-            SELECT role, content, created_at
-            FROM chatbot_messages
-            WHERE conversation_id = :conversation_id
-            ORDER BY created_at DESC
+            SELECT
+                m.role,
+                m.content,
+                m.created_at,
+                c.chart_json
+            FROM chatbot_messages m
+            LEFT JOIN chatbot_charts c ON c.message_id = m.id
+            WHERE m.conversation_id = :conversation_id
+            ORDER BY m.created_at DESC
             LIMIT 10
         """),
         {"conversation_id": conversation_id}
     ).fetchall()
     db.close()
     rows = list(reversed(rows))
+
+    def parse_chart(chart_json):
+        if not chart_json:
+            return None
+        try:
+            # El driver puede devolver la columna JSON ya como dict o como texto,
+            # según el motor; se soportan ambos casos.
+            return chart_json if isinstance(chart_json, dict) else json.loads(chart_json)
+        except Exception:
+            logging.exception("Error parseando chart_json del historial")
+            return None
+
     return {
         "messages": [
             {
                 "role": r.role,
                 "content": r.content,
-                "created_at": r.created_at
+                "created_at": r.created_at,
+                "chart": parse_chart(r.chart_json)
             }
             for r in rows
         ]
